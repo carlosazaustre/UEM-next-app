@@ -1,8 +1,21 @@
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 
-export default function Home() {
+export async function getServerSideProps({ params }) {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${params.id}`
+  );
+  const post = await res.json();
+
+  return {
+    props: {
+      post,
+    },
+  };
+}
+
+export default function Home({ post }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -12,7 +25,8 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Home</h1>
+        <h1 className={styles.title}>{post.title}</h1>
+        <ul>{post.body}</ul>
       </main>
 
       <footer className={styles.footer}>
